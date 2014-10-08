@@ -38,6 +38,9 @@ public class PauseMusicService extends IntentService {
     private PauseMusicNotifier notifier;
     private boolean isMusicPaused;
 
+    private BluetoothAdapter mBluetoothAdapter;
+    private boolean hasBluetooth;
+    
     private final Object syncLock = new Object();
 
     /**
@@ -134,9 +137,22 @@ public class PauseMusicService extends IntentService {
         // Taking audio focus should force other apps to pause/stop music playback
         int audioFocusResult =
                 audioManager.requestAudioFocus(listener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+                
+        TurnOffBluetooth();
+        
         return audioFocusResult == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
     }
 
+    private boolean TurnOffBluetooth() {
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        hasBluetooth = (mBluetoothAdapter == null);
+        if (hasBluetooth && mBluetoothAdapter.isEnabled())
+        {
+            mBluetoothAdapter.disable();
+        }
+        mBluetoothAdapter = null;
+    }
+    
     @Override
     public void onDestroy() {
         super.onDestroy();
