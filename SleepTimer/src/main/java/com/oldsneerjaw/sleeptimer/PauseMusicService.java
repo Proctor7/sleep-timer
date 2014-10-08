@@ -145,13 +145,17 @@ public class PauseMusicService extends IntentService {
     }
 
     private boolean TurnOffBluetooth() {
+        boolean disabled = false;
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         hasBluetooth = (mBluetoothAdapter == null);
+        
         if (hasBluetooth && mBluetoothAdapter.isEnabled())
         {
-            mBluetoothAdapter.disable();
+            disabled = mBluetoothAdapter.disable();
         }
         mBluetoothAdapter = null;
+        
+        return disabled;
     }
     
     @Override
